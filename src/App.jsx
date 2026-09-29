@@ -62,6 +62,7 @@ const stored = (key, fallback) => {
 
 function ProductCard({ product, onAdd, wishlist, onWish, trend = false }) {
   const image = product.image ?? photo(product.img, 800);
+  const orderMessage = `Bonjour MGE Boutique, je souhaite commander : ${product.name}${product.price == null ? '' : ` (${money(product.price)})`}. Pouvez-vous me confirmer la disponibilité ?`;
   return <article className={`product-card ${trend ? 'trend-card' : ''}`}>
     <div className="product-img">
       <img loading="lazy" src={image} alt={product.name} />
@@ -69,14 +70,12 @@ function ProductCard({ product, onAdd, wishlist, onWish, trend = false }) {
       <button className={`heart ${wishlist.includes(product.name) ? 'active' : ''}`} aria-label="Ajouter aux favoris" onClick={() => onWish(product.name)}>
         {wishlist.includes(product.name) ? '♥' : '♡'}
       </button>
-      {product.price == null
-        ? <a className="quick-add" href={`mailto:?subject=${encodeURIComponent(`Prix : ${product.name}`)}`}>Demander le prix&nbsp; ↗</a>
-        : <button className="quick-add" onClick={() => onAdd(product.name)}>＋ Ajouter au panier</button>}
     </div>
     <div className="product-info">{product.rating && <div className="rating">{product.rating}</div>}<h3>{product.name}</h3>
       <div className="product-meta"><span>{product.cat}</span><strong>{money(product.price)}</strong></div>
       {product.notes && <div className="perfume-notes">{product.notes}</div>}
     </div>
+    <a className="whatsapp-cta" href={`https://wa.me/?text=${encodeURIComponent(orderMessage)}`} target="_blank" rel="noopener noreferrer">Commandez sur WhatsApp&nbsp; ↗</a>
   </article>;
 }
 
