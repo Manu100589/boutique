@@ -94,15 +94,32 @@ function App() {
   useEffect(() => { localStorage.setItem('aubeCart', JSON.stringify(cart)); }, [cart]);
   useEffect(() => { localStorage.setItem('aubeWish', JSON.stringify(wishlist)); }, [wishlist]);
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    let frame = 0;
+    const handleScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 40);
+        document.documentElement.style.setProperty('--hero-shift', `${Math.min(window.scrollY, 520) * -0.12}px`);
+        frame = 0;
+      });
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, []);
   useEffect(() => {
+    const targets = document.querySelectorAll('.reveal, .product-card, .split-panel, .quote, .social, .newsletter');
     const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
       if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
-    }), { threshold: 0.13 });
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    }), { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
+    targets.forEach((el, index) => {
+      el.classList.add('scroll-reveal');
+      el.style.setProperty('--motion-delay', `${(index % 5) * 75}ms`);
+      observer.observe(el);
+    });
     return () => observer.disconnect();
   }, []);
 

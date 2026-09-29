@@ -8,3 +8,24 @@
 .quick-add{display:grid;place-items:center;color:var(--ink);text-decoration:none}.perfume-notes{font-size:10px;color:var(--muted);margin-top:8px;line-height:1.6}.perfume-catalogue{background:#f5f1eb}.perfume-catalogue .product-img{background:#e8e1d7}
 .shoe-catalogue{background:#e9e4dc}.shoe-catalogue .product-img{background:#ded9d0}
 
+
+/* Scroll motion: staggered reveals, section-specific entrances, and a restrained hero parallax. */
+.scroll-reveal{opacity:0;transform:translate3d(0,34px,0) scale(.985);filter:blur(3px);transition:opacity .78s ease,transform .9s cubic-bezier(.2,.7,.2,1),filter .78s ease;transition-delay:var(--motion-delay,0ms);will-change:opacity,transform,filter}
+.scroll-reveal.visible{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+.category.scroll-reveal:not(.visible){clip-path:inset(0 0 12% 0)}
+.category.scroll-reveal{transition:opacity .78s ease,transform .9s cubic-bezier(.2,.7,.2,1),filter .78s ease,clip-path .9s cubic-bezier(.2,.7,.2,1);transition-delay:var(--motion-delay,0ms)}
+.category.scroll-reveal.visible{clip-path:inset(0)}
+.product-card.scroll-reveal{transform:translate3d(0,40px,0) scale(.975)}
+.product-card.scroll-reveal.visible{transform:translate3d(0,0,0) scale(1)}
+.split-panel.scroll-reveal:first-child{transform:translate3d(-38px,0,0);transition-delay:0ms}
+.split-panel.scroll-reveal:last-child{transform:translate3d(38px,0,0);transition-delay:120ms}
+.split-panel.scroll-reveal.visible{transform:translate3d(0,0,0)}
+.quote.scroll-reveal{transform:translate3d(0,20px,0) scale(.97);transition-delay:120ms}
+.social.scroll-reveal{transform:translate3d(0,26px,0) scale(.94)}
+.social.scroll-reveal.visible{transform:translate3d(0,0,0) scale(1)}
+.newsletter.scroll-reveal{transform:translate3d(0,30px,0)}
+.hero:before{transform:translate3d(0,var(--hero-shift,0px),0) scale(1.04);animation:heroIn 1.5s ease-out forwards}
+@keyframes heroIn{to{transform:translate3d(0,var(--hero-shift,0px),0) scale(1)}}
+.trend-row{scroll-snap-type:x proximity;scroll-behavior:smooth}
+.trend-card{scroll-snap-align:start}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.scroll-reveal,.reveal{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important;transition:none!important;will-change:auto}.hero:before{animation:none;transform:none}.bottle{animation:none}.trend-row{scroll-behavior:auto}}
