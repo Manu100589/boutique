@@ -17,4 +17,4 @@ Vite affichera l’adresse locale du site. Pour créer la version de production 
 npm run build
 ```
 
-Les photos de la collection parfums sont stockées dans `public/images/parfums`. Les autres images et les polices sont chargées depuis Unsplash et Google Fonts. Les parfums sans tarif fourni affichent « Prix sur demande ». Le panier et les favoris sont enregistrés dans le navigateur. Le parcours de commande est une maquette et ouvre un e-mail de commande.
+Les photos des collections parfums et chaussures sont stockées dans `public/images`. Les autres images et les polices sont chargées depuis Unsplash et Google Fonts. Les articles sans tarif fourni affichent « Prix sur demande ». Le panier et les favoris sont enregistrés dans le navigateur. Le parcours de commande est une maquette et ouvre un e-mail de commande.
