@@ -11,24 +11,44 @@ const products = [
   { name: 'Montre Héritage', cat: 'Accessoires · Acier', price: 79500, rating: '★★★★★', badge: 'Édition', img: 'photo-1523170335258-f5ed11844a49' },
 ];
 
+const perfumes = [
+  { name: 'Vetiver Pamplemousse', cat: 'Zara Emotions · Elixir · 100 ml', price: null, badge: 'Elixir', image: '/images/parfums/vetiver-pamplemousse.jpg' },
+  { name: '#Tobacco Collection Infinite', cat: 'Zara Heritage Selection · 100 ml', price: null, badge: 'Heritage', image: '/images/parfums/tobacco-collection-infinite.jpg' },
+  { name: 'Vibrant Leather', cat: 'Zara · Eau de parfum · 100 ml', price: null, badge: 'Pour lui', image: '/images/parfums/vibrant-leather.jpg' },
+  { name: 'Bogoss Vibrant Leather', cat: 'Zara · Eau de parfum · 100 ml', price: null, badge: 'Pour lui', image: '/images/parfums/bogoss-vibrant-leather.jpg' },
+  { name: 'For Him Solar Edition', cat: 'Zara · 100 ml', price: null, badge: 'Pour lui', image: '/images/parfums/for-him-solar-edition.jpg', notes: 'Mangue · Santal · Fève tonka' },
+  { name: 'Oud Vibrant Leather', cat: 'Zara · Eau de parfum · 100 ml', price: null, badge: 'Oud', image: '/images/parfums/oud-vibrant-leather.jpg' },
+  { name: 'Warm Glance', cat: 'Series: The Light · 100 ml', price: null, badge: 'The Light', image: '/images/parfums/warm-glance.jpg' },
+  { name: 'Captivatingly Paris', cat: 'Zara Olfactive N°09 · 100 ml', price: null, badge: 'Olfactive', image: '/images/parfums/captivatingly-paris.jpg' },
+  { name: 'Sunrise on the Red Sand Dunes', cat: 'Series: The Desert · 100 ml', price: null, badge: 'The Desert', image: '/images/parfums/sunrise-red-sand-dunes.jpg' },
+  { name: 'Gracefully Madrid', cat: 'Zara Olfactive N°05 · 100 ml', price: null, badge: 'Olfactive', image: '/images/parfums/gracefully-madrid.jpg' },
+  { name: 'Wood 02 Collection Opulent', cat: 'Zara Heritage Selection · 100 ml', price: null, badge: 'Heritage', image: '/images/parfums/wood-02-opulent.jpg' },
+  { name: 'Night Pour Homme III', cat: 'Zara · 100 ml', price: null, badge: 'Pour lui', image: '/images/parfums/night-pour-homme-iii.jpg', notes: 'Bergamote · Poire · Iris · Cuir · Cèdre · Ambre' },
+];
+const allProducts = [...products, ...perfumes];
+
 const photo = (id, width = 900) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
-const money = (value) => `${new Intl.NumberFormat('fr-FR').format(value)} FCFA`;
+const money = (value) => value == null ? 'Prix sur demande' : `${new Intl.NumberFormat('fr-FR').format(value)} FCFA`;
 const stored = (key, fallback) => {
   try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
 };
 
 function ProductCard({ product, onAdd, wishlist, onWish, trend = false }) {
+  const image = product.image ?? photo(product.img, 800);
   return <article className={`product-card ${trend ? 'trend-card' : ''}`}>
     <div className="product-img">
-      <img loading="lazy" src={photo(product.img, 800)} alt={product.name} />
+      <img loading="lazy" src={image} alt={product.name} />
       <span className="badge">{product.badge}</span>
       <button className={`heart ${wishlist.includes(product.name) ? 'active' : ''}`} aria-label="Ajouter aux favoris" onClick={() => onWish(product.name)}>
         {wishlist.includes(product.name) ? '♥' : '♡'}
       </button>
-      <button className="quick-add" onClick={() => onAdd(product.name)}>＋ Ajouter au panier</button>
+      {product.price == null
+        ? <a className="quick-add" href={`mailto:bonjour@maisonaube.ci?subject=${encodeURIComponent(`Prix : ${product.name}`)}`}>Demander le prix&nbsp; ↗</a>
+        : <button className="quick-add" onClick={() => onAdd(product.name)}>＋ Ajouter au panier</button>}
     </div>
-    <div className="product-info"><div className="rating">{product.rating}</div><h3>{product.name}</h3>
+    <div className="product-info">{product.rating && <div className="rating">{product.rating}</div>}<h3>{product.name}</h3>
       <div className="product-meta"><span>{product.cat}</span><strong>{money(product.price)}</strong></div>
+      {product.notes && <div className="perfume-notes">{product.notes}</div>}
     </div>
   </article>;
 }
@@ -60,8 +80,8 @@ function App() {
   }, []);
 
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
-  const subtotal = cart.reduce((sum, item) => sum + products.find((p) => p.name === item.name).price * item.qty, 0);
-  const searchResults = useMemo(() => products.filter((p) => `${p.name} ${p.cat}`.toLowerCase().includes(query.toLowerCase())), [query]);
+  const subtotal = cart.reduce((sum, item) => sum + (allProducts.find((p) => p.name === item.name)?.price ?? 0) * item.qty, 0);
+  const searchResults = useMemo(() => allProducts.filter((p) => `${p.name} ${p.cat}`.toLowerCase().includes(query.toLowerCase())), [query]);
   const addToCart = (name) => setCart((current) => current.some((item) => item.name === name)
     ? current.map((item) => item.name === name ? { ...item, qty: item.qty + 1 } : item)
     : [...current, { name, qty: 1 }]);
@@ -87,7 +107,7 @@ function App() {
       <div className="menu-panel">
         <div className="menu-col"><h4>COLLECTION</h4><a href="#nouveautes">Nouveautés</a><a href="#categories">Toute la sélection</a></div>
         <div className="menu-col"><h4>POUR LUI</h4><a href="#lui-elle">Vêtements</a><a href="#lui-elle">Chaussures</a><a href="#lui-elle">Accessoires</a></div>
-        <div className="menu-col"><h4>POUR ELLE</h4><a href="#lui-elle">Vêtements</a><a href="#lui-elle">Beauté</a><a href="#lui-elle">Parfums</a></div>
+        <div className="menu-col"><h4>POUR ELLE</h4><a href="#lui-elle">Vêtements</a><a href="#lui-elle">Beauté</a><a href="#collection-parfums">Parfums</a></div>
         <div className="menu-photo"><span>Les essentiels de saison ↗</span></div>
       </div>
     </header>
@@ -103,7 +123,7 @@ function App() {
             ['Accessoires', 'Le détail juste', 'Tout est dans la nuance.', 'photo-1523170335258-f5ed11844a49'],
             ['Parfums', 'Une empreinte subtile', 'Votre présence, en quelques notes.', 'photo-1594035910387-fea47794261f'],
             ['Beauté', 'Le rituel du quotidien', 'Prendre soin de soi, avec plaisir.', 'photo-1608248543803-ba4f8c70ae0b'],
-          ].map(([title, eyebrow, text, img]) => <a className="category reveal" href={title === 'Parfums' ? '#parfums' : '#nouveautes'} key={title}><img loading="lazy" src={photo(img, 1100)} alt={title} /><div className="cat-copy"><small>{eyebrow}</small><h3>{title}</h3><p>{text}</p></div><span className="cat-arrow">↗</span></a>)}
+          ].map(([title, eyebrow, text, img]) => <a className="category reveal" href={title === 'Parfums' ? '#collection-parfums' : '#nouveautes'} key={title}><img loading="lazy" src={photo(img, 1100)} alt={title} /><div className="cat-copy"><small>{eyebrow}</small><h3>{title}</h3><p>{text}</p></div><span className="cat-arrow">↗</span></a>)}
         </div>
       </section>
 
@@ -116,7 +136,9 @@ function App() {
 
       <section className="trending" id="tendances"><div className="section-head reveal"><div><div className="kicker">Repérés pour vous</div><h2>Tendances du moment</h2></div><div style={{ font: '12px var(--serif)', color: 'var(--muted)' }}>Faites défiler&nbsp; →</div></div><div className="trend-row">{[...products.slice(4), ...products.slice(0, 4)].map((product) => <ProductCard key={`trend-${product.name}`} product={product} trend {...cardProps} />)}</div></section>
 
-      <section className="fragrance" id="parfums"><div className="fragrance-copy reveal"><div className="kicker" style={{ color: '#bdb39f' }}>L’art du parfum</div><h2>Une signature qui vous ressemble.</h2><p>Des sillages singuliers, choisis pour vous accompagner du premier rendez-vous aux jours ordinaires.</p><div className="notes"><div><b>Notes de tête</b>Bergamote · Poivre rose</div><div><b>Notes de cœur</b>Jasmin · Iris</div><div><b>Notes de fond</b>Bois ambré · Musc</div></div><a className="button light" href="#nouveautes">Découvrir les parfums ↗</a></div><div className="bottle"><img src={photo('photo-1592945403244-b3fbafd7f539', 850)} alt="Flacon de parfum sculptural" /></div></section>
+      <section className="fragrance" id="parfums"><div className="fragrance-copy reveal"><div className="kicker" style={{ color: '#bdb39f' }}>L’art du parfum</div><h2>Une signature qui vous ressemble.</h2><p>Des sillages singuliers, choisis pour vous accompagner du premier rendez-vous aux jours ordinaires.</p><div className="notes"><div><b>Notes de tête</b>Bergamote · Poivre rose</div><div><b>Notes de cœur</b>Jasmin · Iris</div><div><b>Notes de fond</b>Bois ambré · Musc</div></div><a className="button light" href="#collection-parfums">Découvrir les parfums ↗</a></div><div className="bottle"><img src="/images/parfums/night-pour-homme-iii.jpg" alt="Night Pour Homme III, flacon de parfum ambré" /></div></section>
+
+      <section className="section perfume-catalogue" id="collection-parfums"><div className="section-head reveal"><div><div className="kicker">La collection parfumée</div><h2>Nos parfums</h2></div><div className="kicker">12 fragrances · 100 ml</div></div><div className="products">{perfumes.map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
 
       <section className="shoe-section" id="chaussures"><div className="shoe-layout"><div className="shoe-image reveal"><img src={photo('photo-1542291026-7eec264c27ff', 1200)} alt="Sneakers rouge sur fond studio" /></div><div className="shoe-copy reveal"><div className="kicker">En mouvement</div><h2>Step into<br />your style.</h2><p>Des silhouettes qui donnent le ton. Des lignes affirmées, un confort pensé pour suivre votre rythme.</p><a className="text-link" href="#nouveautes">Trouver votre paire ↗</a></div></div></section>
 
@@ -126,17 +148,17 @@ function App() {
       <section className="newsletter" id="newsletter"><div className="kicker">Une lettre, de belles découvertes</div><h2>Entrez dans le cercle.</h2><p>Recevez nos nouveautés, collections et offres exclusives.</p><form className="signup" onSubmit={(event) => { event.preventDefault(); setSubscribed(true); setEmail(''); }}><input type="email" required placeholder="Votre adresse email" aria-label="Votre adresse email" value={email} onChange={(event) => setEmail(event.target.value)} /><button>Je m’inscris&nbsp; ↗</button></form><div className="signup-message">{subscribed ? 'Merci, vous êtes dans le cercle.' : ''}</div></section>
     </main>
 
-    <footer className="footer"><div className="footer-top"><div className="footer-brand"><div className="footer-logo">maison aube</div><p>Une sélection de mode, beauté et lifestyle pour celles et ceux qui aiment choisir leur allure.</p></div><div><h4>COLLECTIONS</h4><a href="#categories">Vêtements</a><a href="#chaussures">Chaussures</a><a href="#categories">Accessoires</a><a href="#parfums">Parfums</a><a href="#categories">Beauté</a></div><div><h4>SERVICE CLIENT</h4><a href="mailto:bonjour@maisonaube.ci">Contact</a><a href="#newsletter">Livraison</a><a href="#newsletter">Retours</a><a href="#newsletter">FAQ</a><a href="#newsletter">Conditions de vente</a></div><div><h4>À PROPOS</h4><a href="#accueil">Notre histoire</a><a href="#accueil">Nos valeurs</a><h4 className="social-title">SUIVEZ-NOUS</h4><a href="#social">Instagram&nbsp; · &nbsp;Facebook</a><a href="#social">TikTok&nbsp; · &nbsp;WhatsApp</a></div></div><div className="foot-bottom"><span>© 2025 Maison Aube · Abidjan, Côte d’Ivoire</span><span>Une sélection faite avec intention.</span><span>FR&nbsp; / &nbsp;FCFA</span></div></footer>
+    <footer className="footer"><div className="footer-top"><div className="footer-brand"><div className="footer-logo">maison aube</div><p>Une sélection de mode, beauté et lifestyle pour celles et ceux qui aiment choisir leur allure.</p></div><div><h4>COLLECTIONS</h4><a href="#categories">Vêtements</a><a href="#chaussures">Chaussures</a><a href="#categories">Accessoires</a><a href="#collection-parfums">Parfums</a><a href="#categories">Beauté</a></div><div><h4>SERVICE CLIENT</h4><a href="mailto:bonjour@maisonaube.ci">Contact</a><a href="#newsletter">Livraison</a><a href="#newsletter">Retours</a><a href="#newsletter">FAQ</a><a href="#newsletter">Conditions de vente</a></div><div><h4>À PROPOS</h4><a href="#accueil">Notre histoire</a><a href="#accueil">Nos valeurs</a><h4 className="social-title">SUIVEZ-NOUS</h4><a href="#social">Instagram&nbsp; · &nbsp;Facebook</a><a href="#social">TikTok&nbsp; · &nbsp;WhatsApp</a></div></div><div className="foot-bottom"><span>© 2025 Maison Aube · Abidjan, Côte d’Ivoire</span><span>Une sélection faite avec intention.</span><span>FR&nbsp; / &nbsp;FCFA</span></div></footer>
 
     <nav className="mobile-nav"><button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><i>⌂</i>Accueil</button><button onClick={() => document.querySelector('#categories').scrollIntoView({ behavior: 'smooth' })}><i>▤</i>Catégories</button><button onClick={() => setSearchOpen(true)}><i>⌕</i>Recherche</button><button onClick={() => setDrawer('wishlist')}><i>♡</i>Favoris</button><button onClick={() => setDrawer('cart')}><i>♧</i>Panier</button></nav>
 
     {(drawer || searchOpen) && <div className="overlay show" onClick={closePanels} />}
     <aside className={`drawer ${drawer ? 'show' : ''}`} aria-hidden={!drawer}>
       <div className="drawer-head"><h2>{drawer === 'wishlist' ? 'Ma liste' : 'Votre panier'}</h2><button className="close" onClick={closePanels} aria-label="Fermer">×</button></div>
-      <div className="cart-list">{(drawer === 'wishlist' ? wishlist.map((name) => ({ ...products.find((p) => p.name === name), qty: 0 })) : cart.map((item) => ({ ...products.find((p) => p.name === item.name), qty: item.qty }))).length ? (drawer === 'wishlist' ? wishlist.map((name) => ({ ...products.find((p) => p.name === name), qty: 0 })) : cart.map((item) => ({ ...products.find((p) => p.name === item.name), qty: item.qty }))).map((item) => <div className="cart-item" key={item.name}><img src={photo(item.img, 200)} alt="" /><div><h4>{item.name}</h4><small>{item.cat}</small><p>{money(item.price)}{item.qty ? ` · Qté ${item.qty}` : ''}</p></div><button className="remove" onClick={() => drawer === 'wishlist' ? toggleWishlist(item.name) : setCart((current) => current.filter((x) => x.name !== item.name))}>Retirer</button></div>) : <div className="empty">{drawer === 'wishlist' ? 'Votre liste est encore vide.' : 'Votre panier attend son premier coup de cœur.'}</div>}</div>
+      <div className="cart-list">{(drawer === 'wishlist' ? wishlist.map((name) => ({ ...allProducts.find((p) => p.name === name), qty: 0 })) : cart.map((item) => ({ ...allProducts.find((p) => p.name === item.name), qty: item.qty }))).length ? (drawer === 'wishlist' ? wishlist.map((name) => ({ ...allProducts.find((p) => p.name === name), qty: 0 })) : cart.map((item) => ({ ...allProducts.find((p) => p.name === item.name), qty: item.qty }))).map((item) => <div className="cart-item" key={item.name}><img src={item.image ?? photo(item.img, 200)} alt="" /><div><h4>{item.name}</h4><small>{item.cat}</small><p>{money(item.price)}{item.qty ? ` · Qté ${item.qty}` : ''}</p></div><button className="remove" onClick={() => drawer === 'wishlist' ? toggleWishlist(item.name) : setCart((current) => current.filter((x) => x.name !== item.name))}>Retirer</button></div>) : <div className="empty">{drawer === 'wishlist' ? 'Votre liste est encore vide.' : 'Votre panier attend son premier coup de cœur.'}</div>}</div>
       <div className="cart-total">{drawer === 'cart' && cart.length > 0 && <><div><span>Sous-total</span><strong>{money(subtotal)}</strong></div><div><span>Livraison</span><span>Calculée à l’étape suivante</span></div><a className="button" href="mailto:bonjour@maisonaube.ci?subject=Ma%20commande">Passer la commande&nbsp; ↗</a></>}</div>
     </aside>
-    <div className={`searchbox ${searchOpen ? 'show' : ''}`}><div className="search-line"><span>⌕</span><input placeholder="Que recherchez-vous ?" value={query} onChange={(event) => setQuery(event.target.value)} autoFocus={searchOpen} /><button className="close" onClick={closePanels} aria-label="Fermer la recherche">×</button></div><div className="search-results">{query ? searchResults.length ? searchResults.slice(0, 5).map((item) => <a href="#nouveautes" key={item.name} onClick={closePanels}>{item.name} · {money(item.price)}</a>) : 'Aucun résultat pour le moment.' : 'Rechercher dans la boutique · Vêtements · Parfums · Nouveautés'}</div></div>
+    <div className={`searchbox ${searchOpen ? 'show' : ''}`}><div className="search-line"><span>⌕</span><input placeholder="Que recherchez-vous ?" value={query} onChange={(event) => setQuery(event.target.value)} autoFocus={searchOpen} /><button className="close" onClick={closePanels} aria-label="Fermer la recherche">×</button></div><div className="search-results">{query ? searchResults.length ? searchResults.slice(0, 5).map((item) => <a href={item.image ? '#collection-parfums' : '#nouveautes'} key={item.name} onClick={closePanels}>{item.name} · {money(item.price)}</a>) : 'Aucun résultat pour le moment.' : 'Rechercher dans la boutique · Vêtements · Parfums · Nouveautés'}</div></div>
   </>;
 }
 

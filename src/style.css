@@ -5,3 +5,4 @@
 
 
 .search-results a{display:inline-block;margin:10px 22px 0 0;color:var(--ink)}.signup-message{font-size:10px;margin-top:12px;min-height:12px}.social-section{padding-bottom:90px}
+.quick-add{display:grid;place-items:center;color:var(--ink);text-decoration:none}.perfume-notes{font-size:10px;color:var(--muted);margin-top:8px;line-height:1.6}.perfume-catalogue{background:#f5f1eb}.perfume-catalogue .product-img{background:#e8e1d7}
