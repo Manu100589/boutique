@@ -1,4 +1,4 @@
-# Maison Aube
+# MGE Boutique
 
 Boutique e-commerce de démonstration construite avec React et Vite.
 
@@ -18,3 +18,4 @@ npm run build
 ```
 
 Les photos des collections parfums et chaussures sont stockées dans `public/images`. Les autres images et les polices sont chargées depuis Unsplash et Google Fonts. Les articles sans tarif fourni affichent « Prix sur demande ». Le panier et les favoris sont enregistrés dans le navigateur. Le parcours de commande est une maquette et ouvre un e-mail de commande.
+

@@ -70,7 +70,7 @@ function ProductCard({ product, onAdd, wishlist, onWish, trend = false }) {
         {wishlist.includes(product.name) ? '♥' : '♡'}
       </button>
       {product.price == null
-        ? <a className="quick-add" href={`mailto:bonjour@maisonaube.ci?subject=${encodeURIComponent(`Prix : ${product.name}`)}`}>Demander le prix&nbsp; ↗</a>
+        ? <a className="quick-add" href={`mailto:?subject=${encodeURIComponent(`Prix : ${product.name}`)}`}>Demander le prix&nbsp; ↗</a>
         : <button className="quick-add" onClick={() => onAdd(product.name)}>＋ Ajouter au panier</button>}
     </div>
     <div className="product-info">{product.rating && <div className="rating">{product.rating}</div>}<h3>{product.name}</h3>
@@ -118,9 +118,9 @@ function App() {
   const cardProps = { onAdd: (name) => { addToCart(name); setDrawer('cart'); }, wishlist, onWish: toggleWishlist };
 
   return <>
-    <div className="announcement">Livraison offerte dès 75 000 FCFA <span style={{ margin: '0 12px' }}>·</span> Une attention pour vous, partout en Côte d’Ivoire</div>
+    <div className="announcement">Livraison offerte dès 75 000 FCFA <span style={{ margin: '0 12px' }}>·</span> Une attention pour vous, partout au Cameroun</div>
     <header className={`header ${scrolled || menuOpen ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`} onMouseLeave={() => setMenuOpen(false)}>
-      <a className="logo" href="#accueil">maison aube<span>STYLE · BEAUTÉ · LIFESTYLE</span></a>
+      <a className="logo" href="#accueil">MGE Boutique<span>MODE · PARFUMS · CHAUSSURES · BEAUTÉ</span></a>
       <nav className="nav">
         <a href="#nouveautes">Nouveautés</a>
         {['Vêtements', 'Chaussures', 'Accessoires', 'Parfums', 'Beauté'].map((item) => <div className="nav-item" key={item} onMouseEnter={() => setMenuOpen(true)}><button>{item}</button></div>)}
@@ -145,18 +145,18 @@ function App() {
       <section className="section" id="categories"><div className="section-head reveal"><div><div className="kicker">Votre prochain coup de cœur</div><h2>Explorez votre style</h2></div><a className="text-link" href="#nouveautes">Voir toute la sélection ↗</a></div>
         <div className="categories">
           {[
-            ['Vêtements', 'Les essentiels du vestiaire', 'Des pièces qui vous vont, vraiment.', 'photo-1483985988355-763728e1935b'],
-            ['Chaussures', 'Pas après pas', 'La bonne allure commence ici.', 'photo-1543163521-1bf539c55dd2'],
+            ['Vêtements', 'Les essentiels du vestiaire', 'Des pièces qui vous vont, vraiment.', '/images/chaussures/bottine-talon-rouge.jpg'],
+            ['Chaussures', 'Pas après pas', 'La bonne allure commence ici.', '/images/chaussures/bottine-blanche-plateforme.jpg'],
             ['Accessoires', 'Le détail juste', 'Tout est dans la nuance.', 'photo-1523170335258-f5ed11844a49'],
             ['Parfums', 'Une empreinte subtile', 'Votre présence, en quelques notes.', 'photo-1594035910387-fea47794261f'],
             ['Beauté', 'Le rituel du quotidien', 'Prendre soin de soi, avec plaisir.', 'photo-1608248543803-ba4f8c70ae0b'],
-          ].map(([title, eyebrow, text, img]) => <a className="category reveal" href={title === 'Parfums' ? '#collection-parfums' : title === 'Chaussures' ? '#collection-chaussures' : '#nouveautes'} key={title}><img loading="lazy" src={photo(img, 1100)} alt={title} /><div className="cat-copy"><small>{eyebrow}</small><h3>{title}</h3><p>{text}</p></div><span className="cat-arrow">↗</span></a>)}
+          ].map(([title, eyebrow, text, img]) => <a className="category reveal" href={title === 'Parfums' ? '#collection-parfums' : title === 'Chaussures' ? '#collection-chaussures' : '#nouveautes'} key={title}><img loading="lazy" src={img.startsWith('/') ? img : photo(img, 1100)} alt={title} /><div className="cat-copy"><small>{eyebrow}</small><h3>{title}</h3><p>{text}</p></div><span className="cat-arrow">↗</span></a>)}
         </div>
       </section>
 
       <section className="split" id="lui-elle">
-        <a className="split-panel" href="#nouveautes"><img src={photo('photo-1519085360753-af0119f7cbe7', 1400)} alt="Sélection pour lui" /><div className="split-copy"><small className="eyebrow">La sélection masculine</small><h2>Pour lui</h2><div><span>Vêtements</span><span>Chaussures</span><span>Accessoires</span><span>Parfums</span></div></div></a>
-        <a className="split-panel" href="#nouveautes"><img src={photo('photo-1534528741775-53994a69daeb', 1400)} alt="Sélection pour elle" /><div className="split-copy"><small className="eyebrow">La sélection féminine</small><h2>Pour elle</h2><div><span>Vêtements</span><span>Chaussures</span><span>Accessoires</span><span>Beauté</span></div></div></a>
+        <a className="split-panel" href="#nouveautes"><img src="/images/chaussures/mocassin-brun-homme.jpg" alt="Modèle noir portant la sélection masculine" /><div className="split-copy"><small className="eyebrow">La sélection masculine</small><h2>Pour lui</h2><div><span>Vêtements</span><span>Chaussures</span><span>Accessoires</span><span>Parfums</span></div></div></a>
+        <a className="split-panel" href="#nouveautes"><img src="/images/chaussures/sandale-jaune-bridee.jpg" alt="Modèle noire portant la sélection féminine" /><div className="split-copy"><small className="eyebrow">La sélection féminine</small><h2>Pour elle</h2><div><span>Vêtements</span><span>Chaussures</span><span>Accessoires</span><span>Beauté</span></div></div></a>
       </section>
 
       <section className="section" id="nouveautes"><div className="section-head reveal"><div><div className="kicker">Tout juste arrivés</div><h2>Les nouveautés</h2></div><a className="text-link" href="#tendances">Découvrir la collection ↗</a></div><div className="products">{products.slice(0, 4).map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
@@ -167,17 +167,17 @@ function App() {
 
       <section className="section perfume-catalogue" id="collection-parfums"><div className="section-head reveal"><div><div className="kicker">La collection parfumée</div><h2>Nos parfums</h2></div><div className="kicker">12 fragrances · 100 ml</div></div><div className="products">{perfumes.map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
 
-      <section className="shoe-section" id="chaussures"><div className="shoe-layout"><div className="shoe-image reveal"><img src="/images/chaussures/mocassin-brun-homme.jpg" alt="Mocassins bruns de la collection Maison Aube" /></div><div className="shoe-copy reveal"><div className="kicker">En mouvement</div><h2>Step into<br />your style.</h2><p>Des silhouettes qui donnent le ton. Des lignes affirmées, un confort pensé pour suivre votre rythme.</p><a className="text-link" href="#collection-chaussures">Explorer les chaussures ↗</a></div></div></section>
+      <section className="shoe-section" id="chaussures"><div className="shoe-layout"><div className="shoe-image reveal"><img src="/images/chaussures/mocassin-brun-homme.jpg" alt="Mocassins bruns de la collection MGE Boutique" /></div><div className="shoe-copy reveal"><div className="kicker">En mouvement</div><h2>Step into<br />your style.</h2><p>Des silhouettes qui donnent le ton. Des lignes affirmées, un confort pensé pour suivre votre rythme.</p><a className="text-link" href="#collection-chaussures">Explorer les chaussures ↗</a></div></div></section>
 
       <section className="section shoe-catalogue" id="collection-chaussures"><div className="section-head reveal"><div><div className="kicker">La collection chaussures</div><h2>À chaque pas, son allure</h2></div><div className="kicker">25 modèles · tailles indiquées sur les visuels</div></div><div className="products">{shoes.map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
 
-      <section className="testimonials"><div className="kicker">Le style au quotidien</div><div className="rating">★★★★★</div><div className="quote">« La sélection est superbe, et mon parfum est arrivé si joliment présenté. Je reviendrai sans hésiter. »</div><div className="quote-author">Aminata · Abidjan · Parfum Élégance</div></section>
-      <section className="section social-section" id="social"><div className="section-head"><div><div className="kicker">Vos inspirations, vos instants</div><h2>Inspirez-vous</h2></div><a className="text-link" href="#newsletter">Nous suivre ↗</a></div><div className="social-grid">{['photo-1539109136881-3be0616acf4b','photo-1529139574466-a303027c1d8b','photo-1483985988355-763728e1935b','photo-1515886657613-9f3515b0c78f','photo-1525507119028-ed4c629a60a3'].map((img) => <a className="social" href="#newsletter" key={img}><img loading="lazy" src={photo(img, 600)} alt="Inspiration Maison Aube" /></a>)}</div></section>
+      <section className="testimonials"><div className="kicker">Le style au quotidien</div><div className="rating">★★★★★</div><div className="quote">« La sélection est superbe, et mon parfum est arrivé si joliment présenté. Je reviendrai sans hésiter. »</div><div className="quote-author">Aminata · Cliente · Parfum Élégance</div></section>
+      <section className="section social-section" id="social"><div className="section-head"><div><div className="kicker">Vos inspirations, vos instants</div><h2>Inspirez-vous</h2></div><a className="text-link" href="#newsletter">Nous suivre ↗</a></div><div className="social-grid">{['bottine-talon-rouge','mocassin-brun-homme','sandale-jaune-bridee','cuissarde-bleu-nuit','espadrille-bleu-marine'].map((img) => <a className="social" href="#newsletter" key={img}><img loading="lazy" src={`/images/chaussures/${img}.jpg`} alt="Modèle noir et sélection mode MGE Boutique" /></a>)}</div></section>
 
       <section className="newsletter" id="newsletter"><div className="kicker">Une lettre, de belles découvertes</div><h2>Entrez dans le cercle.</h2><p>Recevez nos nouveautés, collections et offres exclusives.</p><form className="signup" onSubmit={(event) => { event.preventDefault(); setSubscribed(true); setEmail(''); }}><input type="email" required placeholder="Votre adresse email" aria-label="Votre adresse email" value={email} onChange={(event) => setEmail(event.target.value)} /><button>Je m’inscris&nbsp; ↗</button></form><div className="signup-message">{subscribed ? 'Merci, vous êtes dans le cercle.' : ''}</div></section>
     </main>
 
-    <footer className="footer"><div className="footer-top"><div className="footer-brand"><div className="footer-logo">maison aube</div><p>Une sélection de mode, beauté et lifestyle pour celles et ceux qui aiment choisir leur allure.</p></div><div><h4>COLLECTIONS</h4><a href="#categories">Vêtements</a><a href="#collection-chaussures">Chaussures</a><a href="#categories">Accessoires</a><a href="#collection-parfums">Parfums</a><a href="#categories">Beauté</a></div><div><h4>SERVICE CLIENT</h4><a href="mailto:bonjour@maisonaube.ci">Contact</a><a href="#newsletter">Livraison</a><a href="#newsletter">Retours</a><a href="#newsletter">FAQ</a><a href="#newsletter">Conditions de vente</a></div><div><h4>À PROPOS</h4><a href="#accueil">Notre histoire</a><a href="#accueil">Nos valeurs</a><h4 className="social-title">SUIVEZ-NOUS</h4><a href="#social">Instagram&nbsp; · &nbsp;Facebook</a><a href="#social">TikTok&nbsp; · &nbsp;WhatsApp</a></div></div><div className="foot-bottom"><span>© 2025 Maison Aube · Abidjan, Côte d’Ivoire</span><span>Une sélection faite avec intention.</span><span>FR&nbsp; / &nbsp;FCFA</span></div></footer>
+    <footer className="footer"><div className="footer-top"><div className="footer-brand"><div className="footer-logo">MGE Boutique</div><p>Une sélection de mode, beauté et lifestyle pour celles et ceux qui aiment choisir leur allure.</p></div><div><h4>COLLECTIONS</h4><a href="#categories">Vêtements</a><a href="#collection-chaussures">Chaussures</a><a href="#categories">Accessoires</a><a href="#collection-parfums">Parfums</a><a href="#categories">Beauté</a></div><div><h4>SERVICE CLIENT</h4><a href="mailto:">Contact</a><a href="#newsletter">Livraison</a><a href="#newsletter">Retours</a><a href="#newsletter">FAQ</a><a href="#newsletter">Conditions de vente</a></div><div><h4>À PROPOS</h4><a href="#accueil">Notre histoire</a><a href="#accueil">Nos valeurs</a><h4 className="social-title">SUIVEZ-NOUS</h4><a href="#social">Instagram&nbsp; · &nbsp;Facebook</a><a href="#social">TikTok&nbsp; · &nbsp;WhatsApp</a></div></div><div className="foot-bottom"><span>© 2026 MGE Boutique · Cameroun</span><span>Une sélection faite avec intention.</span><span>FR&nbsp; / &nbsp;FCFA</span></div></footer>
 
     <nav className="mobile-nav"><button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><i>⌂</i>Accueil</button><button onClick={() => document.querySelector('#categories').scrollIntoView({ behavior: 'smooth' })}><i>▤</i>Catégories</button><button onClick={() => setSearchOpen(true)}><i>⌕</i>Recherche</button><button onClick={() => setDrawer('wishlist')}><i>♡</i>Favoris</button><button onClick={() => setDrawer('cart')}><i>♧</i>Panier</button></nav>
 
@@ -185,10 +185,12 @@ function App() {
     <aside className={`drawer ${drawer ? 'show' : ''}`} aria-hidden={!drawer}>
       <div className="drawer-head"><h2>{drawer === 'wishlist' ? 'Ma liste' : 'Votre panier'}</h2><button className="close" onClick={closePanels} aria-label="Fermer">×</button></div>
       <div className="cart-list">{(drawer === 'wishlist' ? wishlist.map((name) => ({ ...allProducts.find((p) => p.name === name), qty: 0 })) : cart.map((item) => ({ ...allProducts.find((p) => p.name === item.name), qty: item.qty }))).length ? (drawer === 'wishlist' ? wishlist.map((name) => ({ ...allProducts.find((p) => p.name === name), qty: 0 })) : cart.map((item) => ({ ...allProducts.find((p) => p.name === item.name), qty: item.qty }))).map((item) => <div className="cart-item" key={item.name}><img src={item.image ?? photo(item.img, 200)} alt="" /><div><h4>{item.name}</h4><small>{item.cat}</small><p>{money(item.price)}{item.qty ? ` · Qté ${item.qty}` : ''}</p></div><button className="remove" onClick={() => drawer === 'wishlist' ? toggleWishlist(item.name) : setCart((current) => current.filter((x) => x.name !== item.name))}>Retirer</button></div>) : <div className="empty">{drawer === 'wishlist' ? 'Votre liste est encore vide.' : 'Votre panier attend son premier coup de cœur.'}</div>}</div>
-      <div className="cart-total">{drawer === 'cart' && cart.length > 0 && <><div><span>Sous-total</span><strong>{money(subtotal)}</strong></div><div><span>Livraison</span><span>Calculée à l’étape suivante</span></div><a className="button" href="mailto:bonjour@maisonaube.ci?subject=Ma%20commande">Passer la commande&nbsp; ↗</a></>}</div>
+      <div className="cart-total">{drawer === 'cart' && cart.length > 0 && <><div><span>Sous-total</span><strong>{money(subtotal)}</strong></div><div><span>Livraison</span><span>Calculée à l’étape suivante</span></div><a className="button" href="mailto:?subject=Ma%20commande">Passer la commande&nbsp; ↗</a></>}</div>
     </aside>
     <div className={`searchbox ${searchOpen ? 'show' : ''}`}><div className="search-line"><span>⌕</span><input placeholder="Que recherchez-vous ?" value={query} onChange={(event) => setQuery(event.target.value)} autoFocus={searchOpen} /><button className="close" onClick={closePanels} aria-label="Fermer la recherche">×</button></div><div className="search-results">{query ? searchResults.length ? searchResults.slice(0, 5).map((item) => <a href={item.cat.startsWith('Homme ·') || item.cat.startsWith('Femme ·') ? '#collection-chaussures' : item.image ? '#collection-parfums' : '#nouveautes'} key={item.name} onClick={closePanels}>{item.name} · {money(item.price)}</a>) : 'Aucun résultat pour le moment.' : 'Rechercher dans la boutique · Vêtements · Parfums · Nouveautés'}</div></div>
   </>;
 }
 
 export default App;
+
+

@@ -1,5 +1,5 @@
 {
-  "name": "maison-aube",
+  "name": "mge-boutique",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -17,3 +17,4 @@
     "vite": "latest"
   }
 }
+
