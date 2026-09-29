@@ -111,14 +111,21 @@ function App() {
   }, []);
   useEffect(() => {
     const targets = document.querySelectorAll('.reveal, .product-card, .split-panel, .quote, .social, .newsletter');
+    const splitSections = document.querySelectorAll('.split-scroll');
     const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
-      if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
-    }), { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
+      if (entry.target.classList.contains('split-scroll')) {
+        entry.target.classList.toggle('visible', entry.isIntersecting);
+      } else if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    }), { threshold: 0.12, rootMargin: '0px 0px -10% 0px' });
     targets.forEach((el, index) => {
       el.classList.add('scroll-reveal');
       el.style.setProperty('--motion-delay', `${(index % 5) * 75}ms`);
       observer.observe(el);
     });
+    splitSections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, []);
 
@@ -158,7 +165,7 @@ function App() {
     <main>
       <section className="hero" id="accueil"><div className="hero-content"><div className="eyebrow">La sélection qui vous ressemble</div><h1>VOTRE STYLE.<br />VOTRE SIGNATURE.</h1><p>Mode, parfums, chaussures, accessoires et beauté sélectionnés pour révéler votre personnalité.</p><div className="actions"><a className="button" href="#categories">Découvrir la collection <span>↗</span></a><a className="button light" href="#nouveautes">Voir les nouveautés</a></div></div><div className="scroll-note">DÉFILER POUR EXPLORER ↓</div><div className="hero-index">01 — 04</div></section>
 
-      <section className="section" id="categories"><div className="section-head reveal"><div><div className="kicker">Votre prochain coup de cœur</div><h2>Explorez votre style</h2></div><a className="text-link" href="#nouveautes">Voir toute la sélection ↗</a></div>
+      <section className="section split-scroll" id="categories"><div className="section-head reveal"><div><div className="kicker">Votre prochain coup de cœur</div><h2>Explorez votre style</h2></div><a className="text-link" href="#nouveautes">Voir toute la sélection ↗</a></div>
         <div className="categories">
           {[
             ['Vêtements', 'Les essentiels du vestiaire', 'Des pièces qui vous vont, vraiment.', '/images/chaussures/bottine-talon-rouge.jpg'],
@@ -175,22 +182,22 @@ function App() {
         <a className="split-panel" href="#nouveautes"><img src="/images/chaussures/sandale-jaune-bridee.jpg" alt="Modèle noire portant la sélection féminine" /><div className="split-copy"><small className="eyebrow">La sélection féminine</small><h2>Pour elle</h2><div><span>Vêtements</span><span>Chaussures</span><span>Accessoires</span><span>Beauté</span></div></div></a>
       </section>
 
-      <section className="section" id="nouveautes"><div className="section-head reveal"><div><div className="kicker">Tout juste arrivés</div><h2>Les nouveautés</h2></div><a className="text-link" href="#tendances">Découvrir la collection ↗</a></div><div className="products">{products.slice(0, 4).map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
+      <section className="section split-scroll" id="nouveautes"><div className="section-head reveal"><div><div className="kicker">Tout juste arrivés</div><h2>Les nouveautés</h2></div><a className="text-link" href="#tendances">Découvrir la collection ↗</a></div><div className="products">{products.slice(0, 4).map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
 
       <section className="trending" id="tendances"><div className="section-head reveal"><div><div className="kicker">Repérés pour vous</div><h2>Tendances du moment</h2></div><div style={{ font: '12px var(--serif)', color: 'var(--muted)' }}>Faites défiler&nbsp; →</div></div><div className="trend-row">{[...products.slice(4), ...products.slice(0, 4)].map((product) => <ProductCard key={`trend-${product.name}`} product={product} trend {...cardProps} />)}</div></section>
 
       <section className="fragrance" id="parfums"><div className="fragrance-copy reveal"><div className="kicker" style={{ color: '#bdb39f' }}>L’art du parfum</div><h2>Une signature qui vous ressemble.</h2><p>Des sillages singuliers, choisis pour vous accompagner du premier rendez-vous aux jours ordinaires.</p><div className="notes"><div><b>Notes de tête</b>Bergamote · Poivre rose</div><div><b>Notes de cœur</b>Jasmin · Iris</div><div><b>Notes de fond</b>Bois ambré · Musc</div></div><a className="button light" href="#collection-parfums">Découvrir les parfums ↗</a></div><div className="bottle"><img src="/images/parfums/night-pour-homme-iii.jpg" alt="Night Pour Homme III, flacon de parfum ambré" /></div></section>
 
-      <section className="section perfume-catalogue" id="collection-parfums"><div className="section-head reveal"><div><div className="kicker">La collection parfumée</div><h2>Nos parfums</h2></div><div className="kicker">12 fragrances · 100 ml</div></div><div className="products">{perfumes.map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
+      <section className="section perfume-catalogue split-scroll" id="collection-parfums"><div className="section-head reveal"><div><div className="kicker">La collection parfumée</div><h2>Nos parfums</h2></div><div className="kicker">12 fragrances · 100 ml</div></div><div className="products">{perfumes.map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
 
       <section className="shoe-section" id="chaussures"><div className="shoe-layout"><div className="shoe-image reveal"><img src="/images/chaussures/mocassin-brun-homme.jpg" alt="Mocassins bruns de la collection MGE Boutique" /></div><div className="shoe-copy reveal"><div className="kicker">En mouvement</div><h2>Step into<br />your style.</h2><p>Des silhouettes qui donnent le ton. Des lignes affirmées, un confort pensé pour suivre votre rythme.</p><a className="text-link" href="#collection-chaussures">Explorer les chaussures ↗</a></div></div></section>
 
-      <section className="section shoe-catalogue" id="collection-chaussures"><div className="section-head reveal"><div><div className="kicker">La collection chaussures</div><h2>À chaque pas, son allure</h2></div><div className="kicker">25 modèles · tailles indiquées sur les visuels</div></div><div className="products">{shoes.map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
+      <section className="section shoe-catalogue split-scroll" id="collection-chaussures"><div className="section-head reveal"><div><div className="kicker">La collection chaussures</div><h2>À chaque pas, son allure</h2></div><div className="kicker">25 modèles · tailles indiquées sur les visuels</div></div><div className="products">{shoes.map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
 
-      <section className="testimonials"><div className="kicker">Le style au quotidien</div><div className="rating">★★★★★</div><div className="quote">« La sélection est superbe, et mon parfum est arrivé si joliment présenté. Je reviendrai sans hésiter. »</div><div className="quote-author">Aminata · Cliente · Parfum Élégance</div></section>
-      <section className="section social-section" id="social"><div className="section-head"><div><div className="kicker">Vos inspirations, vos instants</div><h2>Inspirez-vous</h2></div><a className="text-link" href="#newsletter">Nous suivre ↗</a></div><div className="social-grid">{['bottine-talon-rouge','mocassin-brun-homme','sandale-jaune-bridee','cuissarde-bleu-nuit','espadrille-bleu-marine'].map((img) => <a className="social" href="#newsletter" key={img}><img loading="lazy" src={`/images/chaussures/${img}.jpg`} alt="Modèle noir et sélection mode MGE Boutique" /></a>)}</div></section>
+      <section className="testimonials split-scroll"><div className="kicker">Le style au quotidien</div><div className="rating">★★★★★</div><div className="quote">« La sélection est superbe, et mon parfum est arrivé si joliment présenté. Je reviendrai sans hésiter. »</div><div className="quote-author">Aminata · Cliente · Parfum Élégance</div></section>
+      <section className="section social-section split-scroll" id="social"><div className="section-head"><div><div className="kicker">Vos inspirations, vos instants</div><h2>Inspirez-vous</h2></div><a className="text-link" href="#newsletter">Nous suivre ↗</a></div><div className="social-grid">{['bottine-talon-rouge','mocassin-brun-homme','sandale-jaune-bridee','cuissarde-bleu-nuit','espadrille-bleu-marine'].map((img) => <a className="social" href="#newsletter" key={img}><img loading="lazy" src={`/images/chaussures/${img}.jpg`} alt="Modèle noir et sélection mode MGE Boutique" /></a>)}</div></section>
 
-      <section className="newsletter" id="newsletter"><div className="kicker">Une lettre, de belles découvertes</div><h2>Entrez dans le cercle.</h2><p>Recevez nos nouveautés, collections et offres exclusives.</p><form className="signup" onSubmit={(event) => { event.preventDefault(); setSubscribed(true); setEmail(''); }}><input type="email" required placeholder="Votre adresse email" aria-label="Votre adresse email" value={email} onChange={(event) => setEmail(event.target.value)} /><button>Je m’inscris&nbsp; ↗</button></form><div className="signup-message">{subscribed ? 'Merci, vous êtes dans le cercle.' : ''}</div></section>
+      <section className="newsletter split-scroll" id="newsletter"><div className="kicker">Une lettre, de belles découvertes</div><h2>Entrez dans le cercle.</h2><p>Recevez nos nouveautés, collections et offres exclusives.</p><form className="signup" onSubmit={(event) => { event.preventDefault(); setSubscribed(true); setEmail(''); }}><input type="email" required placeholder="Votre adresse email" aria-label="Votre adresse email" value={email} onChange={(event) => setEmail(event.target.value)} /><button>Je m’inscris&nbsp; ↗</button></form><div className="signup-message">{subscribed ? 'Merci, vous êtes dans le cercle.' : ''}</div></section>
     </main>
 
     <footer className="footer"><div className="footer-top"><div className="footer-brand"><div className="footer-logo">MGE Boutique</div><p>Une sélection de mode, beauté et lifestyle pour celles et ceux qui aiment choisir leur allure.</p></div><div><h4>COLLECTIONS</h4><a href="#categories">Vêtements</a><a href="#collection-chaussures">Chaussures</a><a href="#categories">Accessoires</a><a href="#collection-parfums">Parfums</a><a href="#categories">Beauté</a></div><div><h4>SERVICE CLIENT</h4><a href="mailto:">Contact</a><a href="#newsletter">Livraison</a><a href="#newsletter">Retours</a><a href="#newsletter">FAQ</a><a href="#newsletter">Conditions de vente</a></div><div><h4>À PROPOS</h4><a href="#accueil">Notre histoire</a><a href="#accueil">Nos valeurs</a><h4 className="social-title">SUIVEZ-NOUS</h4><a href="#social">Instagram&nbsp; · &nbsp;Facebook</a><a href="#social">TikTok&nbsp; · &nbsp;WhatsApp</a></div></div><div className="foot-bottom"><span>© 2026 MGE Boutique · Cameroun</span><span>Une sélection faite avec intention.</span><span>FR&nbsp; / &nbsp;FCFA</span></div></footer>

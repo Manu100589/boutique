@@ -31,3 +31,13 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.scroll-reveal,.reveal{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important;transition:none!important;will-change:auto}.hero:before{animation:none;transform:none}.bottle{animation:none}.trend-row{scroll-behavior:auto}}
 
 .product-card{display:flex;flex-direction:column}.product-info{flex:1}.whatsapp-cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:16px;padding:14px 10px;background:#178c52;color:#fff;text-align:center;font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;transition:background .25s,transform .25s,box-shadow .25s}.whatsapp-cta:hover{background:#116c3e;transform:translateY(-2px);box-shadow:0 8px 18px #116c3e26}.whatsapp-cta:focus-visible{outline:2px solid #116c3e;outline-offset:3px}
+
+/* Full-width split reveal; entering opens the two halves, leaving closes them so it reverses on scroll-up. */
+.split-scroll{position:relative;isolation:isolate;overflow:hidden;--split-cover:var(--paper)}
+.split-scroll:before,.split-scroll:after{content:'';position:absolute;top:0;bottom:0;width:50.1%;background:var(--split-cover);z-index:8;pointer-events:none;transition:transform 1s cubic-bezier(.76,0,.24,1)}
+.split-scroll:before{left:0;transform:translateX(0)}
+.split-scroll:after{right:0;transform:translateX(0)}
+.split-scroll.visible:before{transform:translateX(-102%)}
+.split-scroll.visible:after{transform:translateX(102%)}
+.newsletter.split-scroll{--split-cover:#d8d6c9}
+@media(prefers-reduced-motion:reduce){.split-scroll:before{transform:translateX(-102%);transition:none}.split-scroll:after{transform:translateX(102%);transition:none}}
