@@ -52,7 +52,11 @@ const shoes = [
   { name: 'Espadrille rayée marine', cat: 'Homme · Espadrille', price: null, badge: 'Pointure 45', image: '/images/chaussures/espadrille-rayee-marine.jpg', notes: 'Pointure 45' },
   { name: 'Espadrille bleu marine', cat: 'Homme · Espadrille', price: null, badge: 'Pointure 45', image: '/images/chaussures/espadrille-bleu-marine.jpg', notes: 'Pointure 45' },
 ];
-const allProducts = [...products, ...perfumes, ...shoes];
+const pagnes = Array.from({ length: 40 }, (_, index) => {
+  const number = String(index + 1).padStart(2, '0');
+  return { name: `Pagne Wax ${number}`, cat: 'Femme · Pagne', price: null, badge: 'Pagne', image: `/images/pagnes/pagne-${number}.webp` };
+});
+const allProducts = [...products, ...perfumes, ...shoes, ...pagnes];
 
 const photo = (id, width = 900) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
 const money = (value) => value == null ? 'Prix sur demande' : `${new Intl.NumberFormat('fr-FR').format(value)} FCFA`;
@@ -159,7 +163,7 @@ function App() {
       <div className="menu-panel">
         <div className="menu-col"><h4>COLLECTION</h4><a href="#nouveautes">Nouveautés</a><a href="#categories">Toute la sélection</a></div>
         <div className="menu-col"><h4>POUR LUI</h4><a href="#lui-elle">Vêtements</a><a href="#collection-chaussures">Chaussures</a><a href="#lui-elle">Accessoires</a></div>
-        <div className="menu-col"><h4>POUR ELLE</h4><a href="#lui-elle">Vêtements</a><a href="#collection-chaussures">Chaussures</a><a href="#lui-elle">Beauté</a><a href="#collection-parfums">Parfums</a></div>
+        <div className="menu-col"><h4>POUR ELLE</h4><a href="#pagne">Vêtements · Pagne</a><a href="#collection-chaussures">Chaussures</a><a href="#lui-elle">Beauté</a><a href="#collection-parfums">Parfums</a></div>
         <div className="menu-photo"><span>Les essentiels de saison ↗</span></div>
       </div>
     </header>
@@ -170,12 +174,12 @@ function App() {
       <section className="section split-scroll" id="categories"><div className="section-head reveal"><div><div className="kicker">Votre prochain coup de cœur</div><h2>Explorez votre style</h2></div><a className="text-link" href="#nouveautes">Voir toute la sélection ↗</a></div>
         <div className="categories">
           {[
-            ['Vêtements', 'Les essentiels du vestiaire', 'Des pièces qui vous vont, vraiment.', '/images/chaussures/bottine-talon-rouge.jpg'],
+            ['Vêtements', 'Le pagne au quotidien', 'Des motifs choisis pour exprimer votre style.', '/images/pagnes/pagne-01.webp'],
             ['Chaussures', 'Pas après pas', 'La bonne allure commence ici.', '/images/chaussures/bottine-blanche-plateforme.jpg'],
             ['Accessoires', 'Le détail juste', 'Tout est dans la nuance.', 'photo-1523170335258-f5ed11844a49'],
             ['Parfums', 'Une empreinte subtile', 'Votre présence, en quelques notes.', 'photo-1594035910387-fea47794261f'],
             ['Beauté', 'Le rituel du quotidien', 'Prendre soin de soi, avec plaisir.', 'photo-1608248543803-ba4f8c70ae0b'],
-          ].map(([title, eyebrow, text, img]) => <a className="category reveal" href={title === 'Parfums' ? '#collection-parfums' : title === 'Chaussures' ? '#collection-chaussures' : '#nouveautes'} key={title}><img loading="lazy" src={img.startsWith('/') ? img : photo(img, 1100)} alt={title} /><div className="cat-copy"><small>{eyebrow}</small><h3>{title}</h3><p>{text}</p></div><span className="cat-arrow">↗</span></a>)}
+          ].map(([title, eyebrow, text, img]) => <a className="category reveal" href={title === 'Parfums' ? '#collection-parfums' : title === 'Chaussures' ? '#collection-chaussures' : title === 'Vêtements' ? '#pagne' : '#nouveautes'} key={title}><img loading="lazy" src={img.startsWith('/') ? img : photo(img, 1100)} alt={title} /><div className="cat-copy"><small>{eyebrow}</small><h3>{title}</h3><p>{text}</p></div><span className="cat-arrow">↗</span></a>)}
         </div>
       </section>
 
@@ -183,6 +187,8 @@ function App() {
         <a className="split-panel" href="#nouveautes"><img src="/images/chaussures/mocassin-brun-homme.jpg" alt="Modèle noir portant la sélection masculine" /><div className="split-copy"><small className="eyebrow">La sélection masculine</small><h2>Pour lui</h2><div><span>Vêtements</span><span>Chaussures</span><span>Accessoires</span><span>Parfums</span></div></div></a>
         <a className="split-panel" href="#nouveautes"><img src="/images/chaussures/sandale-jaune-bridee.jpg" alt="Modèle noire portant la sélection féminine" /><div className="split-copy"><small className="eyebrow">La sélection féminine</small><h2>Pour elle</h2><div><span>Vêtements</span><span>Chaussures</span><span>Accessoires</span><span>Beauté</span></div></div></a>
       </section>
+
+      <section className="section pagne-catalogue split-scroll" id="pagne"><div className="section-head reveal"><div><div className="kicker">Vêtements · Pour elle</div><h2>Pagne</h2></div><div className="kicker">{pagnes.length} motifs · Prix sur demande</div></div><p className="pagne-intro">Une sélection de pagnes aux motifs et couleurs variés, à découvrir et à commander directement sur WhatsApp.</p><div className="products">{pagnes.map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
 
       <section className="section split-scroll" id="nouveautes"><div className="section-head reveal"><div><div className="kicker">Tout juste arrivés</div><h2>Les nouveautés</h2></div><a className="text-link" href="#tendances">Découvrir la collection ↗</a></div><div className="products">{products.slice(0, 4).map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
 
@@ -212,7 +218,7 @@ function App() {
       <div className="cart-list">{(drawer === 'wishlist' ? wishlist.map((name) => ({ ...allProducts.find((p) => p.name === name), qty: 0 })) : cart.map((item) => ({ ...allProducts.find((p) => p.name === item.name), qty: item.qty }))).length ? (drawer === 'wishlist' ? wishlist.map((name) => ({ ...allProducts.find((p) => p.name === name), qty: 0 })) : cart.map((item) => ({ ...allProducts.find((p) => p.name === item.name), qty: item.qty }))).map((item) => <div className="cart-item" key={item.name}><img src={item.image ?? photo(item.img, 200)} alt="" /><div><h4>{item.name}</h4><small>{item.cat}</small><p>{money(item.price)}{item.qty ? ` · Qté ${item.qty}` : ''}</p></div><button className="remove" onClick={() => drawer === 'wishlist' ? toggleWishlist(item.name) : setCart((current) => current.filter((x) => x.name !== item.name))}>Retirer</button></div>) : <div className="empty">{drawer === 'wishlist' ? 'Votre liste est encore vide.' : 'Votre panier attend son premier coup de cœur.'}</div>}</div>
       <div className="cart-total">{drawer === 'cart' && cart.length > 0 && <><div><span>Sous-total</span><strong>{money(subtotal)}</strong></div><div><span>Livraison</span><span>Calculée à l’étape suivante</span></div><a className="button" href="mailto:?subject=Ma%20commande">Passer la commande&nbsp; ↗</a></>}</div>
     </aside>
-    <div className={`searchbox ${searchOpen ? 'show' : ''}`}><div className="search-line"><span>⌕</span><input placeholder="Que recherchez-vous ?" value={query} onChange={(event) => setQuery(event.target.value)} autoFocus={searchOpen} /><button className="close" onClick={closePanels} aria-label="Fermer la recherche">×</button></div><div className="search-results">{query ? searchResults.length ? searchResults.slice(0, 5).map((item) => <a className="search-result" href={item.cat.startsWith('Homme ·') || item.cat.startsWith('Femme ·') ? '#collection-chaussures' : item.image ? '#collection-parfums' : '#nouveautes'} key={item.name} onClick={closePanels}><img src={item.image ?? photo(item.img, 220)} alt="" /><span><strong>{item.name}</strong><small>{item.cat}</small></span><b>{money(item.price)}</b></a>) : 'Aucun résultat pour le moment.' : 'Rechercher dans la boutique · Vêtements · Parfums · Nouveautés'}</div></div>
+    <div className={`searchbox ${searchOpen ? 'show' : ''}`}><div className="search-line"><span>⌕</span><input placeholder="Que recherchez-vous ?" value={query} onChange={(event) => setQuery(event.target.value)} autoFocus={searchOpen} /><button className="close" onClick={closePanels} aria-label="Fermer la recherche">×</button></div><div className="search-results">{query ? searchResults.length ? searchResults.slice(0, 5).map((item) => <a className="search-result" href={item.cat === 'Femme · Pagne' ? '#pagne' : item.cat.startsWith('Homme ·') || item.cat.startsWith('Femme ·') ? '#collection-chaussures' : item.image ? '#collection-parfums' : '#nouveautes'} key={item.name} onClick={closePanels}><img src={item.image ?? photo(item.img, 220)} alt="" /><span><strong>{item.name}</strong><small>{item.cat}</small></span><b>{money(item.price)}</b></a>) : 'Aucun résultat pour le moment.' : 'Rechercher dans la boutique · Vêtements · Parfums · Nouveautés'}</div></div>
   </>;
 }
 
