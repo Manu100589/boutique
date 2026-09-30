@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const products = [
   { name: 'Parfum Élégance', cat: 'Parfum · 50 ml', price: 39900, rating: '★★★★★', badge: 'Nouveau', img: 'photo-1594035910387-fea47794261f' },
@@ -77,24 +77,6 @@ function ProductCard({ product, onAdd, wishlist, onWish, trend = false }) {
     </div>
     <a className="whatsapp-cta" href={`https://wa.me/?text=${encodeURIComponent(orderMessage)}`} target="_blank" rel="noopener noreferrer">Commandez sur WhatsApp&nbsp; ↗</a>
   </article>;
-}
-
-function ProductCarousel({ items, cardProps, label, trend = false }) {
-  const trackRef = useRef(null);
-  const move = (direction) => {
-    const track = trackRef.current;
-    const card = track?.querySelector('.product-card');
-    if (!track || !card) return;
-    const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 20;
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    track.scrollBy({ left: direction * (card.getBoundingClientRect().width + gap) * 3, behavior: reducedMotion ? 'auto' : 'smooth' });
-  };
-  return <>
-    <div className={`product-carousel ${trend ? 'trend-row' : 'products'}`} ref={trackRef} role="region" aria-label={label} tabIndex="0">
-      {items.map((product) => <ProductCard key={`${trend ? 'trend-' : ''}${product.name}`} product={product} trend={trend} {...cardProps} />)}
-    </div>
-    <div className="carousel-controls"><span>Faites défiler pour explorer</span><div><button type="button" onClick={() => move(-1)} aria-label={`Afficher les articles précédents : ${label}`}>←</button><button type="button" onClick={() => move(1)} aria-label={`Afficher les articles suivants : ${label}`}>→</button></div></div>
-  </>;
 }
 
 function App() {
@@ -202,17 +184,17 @@ function App() {
         <a className="split-panel" href="#nouveautes"><img src="/images/chaussures/sandale-jaune-bridee.jpg" alt="Modèle noire portant la sélection féminine" /><div className="split-copy"><small className="eyebrow">La sélection féminine</small><h2>Pour elle</h2><div><span>Vêtements</span><span>Chaussures</span><span>Accessoires</span><span>Beauté</span></div></div></a>
       </section>
 
-      <section className="section split-scroll" id="nouveautes"><div className="section-head reveal"><div><div className="kicker">Tout juste arrivés</div><h2>Les nouveautés</h2></div><a className="text-link" href="#tendances">Découvrir la collection ↗</a></div><ProductCarousel items={products.slice(0, 4)} cardProps={cardProps} label="Les nouveautés" /></section>
+      <section className="section split-scroll" id="nouveautes"><div className="section-head reveal"><div><div className="kicker">Tout juste arrivés</div><h2>Les nouveautés</h2></div><a className="text-link" href="#tendances">Découvrir la collection ↗</a></div><div className="products">{products.slice(0, 4).map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
 
-      <section className="trending" id="tendances"><div className="section-head reveal"><div><div className="kicker">Repérés pour vous</div><h2>Tendances du moment</h2></div><div style={{ font: '12px var(--serif)', color: 'var(--muted)' }}>Faites défiler&nbsp; →</div></div><ProductCarousel items={[...products.slice(4), ...products.slice(0, 4)]} cardProps={cardProps} label="Tendances du moment" trend /></section>
+      <section className="trending" id="tendances"><div className="section-head reveal"><div><div className="kicker">Repérés pour vous</div><h2>Tendances du moment</h2></div><div style={{ font: '12px var(--serif)', color: 'var(--muted)' }}>Faites défiler&nbsp; →</div></div><div className="trend-row">{[...products.slice(4), ...products.slice(0, 4)].map((product) => <ProductCard key={`trend-${product.name}`} product={product} trend {...cardProps} />)}</div></section>
 
       <section className="fragrance" id="parfums"><div className="fragrance-copy reveal"><div className="kicker" style={{ color: '#a8d0b5' }}>L’art du parfum</div><h2>Une signature qui vous ressemble.</h2><p>Des sillages singuliers, choisis pour vous accompagner du premier rendez-vous aux jours ordinaires.</p><div className="notes"><div><b>Notes de tête</b>Bergamote · Poivre rose</div><div><b>Notes de cœur</b>Jasmin · Iris</div><div><b>Notes de fond</b>Bois ambré · Musc</div></div><a className="button light" href="#collection-parfums">Découvrir les parfums ↗</a></div><div className="bottle"><img src="/images/parfums/night-pour-homme-iii.jpg" alt="Night Pour Homme III, flacon de parfum ambré" /></div></section>
 
-      <section className="section perfume-catalogue split-scroll" id="collection-parfums"><div className="section-head reveal"><div><div className="kicker">La collection parfumée</div><h2>Nos parfums</h2></div><div className="kicker">12 fragrances · 100 ml</div></div><ProductCarousel items={perfumes} cardProps={cardProps} label="Collection des parfums" /></section>
+      <section className="section perfume-catalogue split-scroll" id="collection-parfums"><div className="section-head reveal"><div><div className="kicker">La collection parfumée</div><h2>Nos parfums</h2></div><div className="kicker">12 fragrances · 100 ml</div></div><div className="products">{perfumes.map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
 
       <section className="shoe-section" id="chaussures"><div className="shoe-layout"><div className="shoe-image reveal"><img src="/images/chaussures/mocassin-brun-homme.jpg" alt="Mocassins bruns de la collection MGE Boutique" /></div><div className="shoe-copy reveal"><div className="kicker">En mouvement</div><h2>Step into<br />your style.</h2><p>Des silhouettes qui donnent le ton. Des lignes affirmées, un confort pensé pour suivre votre rythme.</p><a className="text-link" href="#collection-chaussures">Explorer les chaussures ↗</a></div></div></section>
 
-      <section className="section shoe-catalogue split-scroll" id="collection-chaussures"><div className="section-head reveal"><div><div className="kicker">La collection chaussures</div><h2>À chaque pas, son allure</h2></div><div className="kicker">{visibleShoes.length} modèles · tailles indiquées sur les visuels</div></div><div className="collection-filters" role="group" aria-label="Filtrer les chaussures par genre">{['Tous', 'Femme', 'Homme'].map((filter) => <button key={filter} type="button" className={shoeFilter === filter ? 'active' : ''} aria-pressed={shoeFilter === filter} onClick={() => setShoeFilter(filter)}>{filter}</button>)}</div><ProductCarousel items={visibleShoes} cardProps={cardProps} label="Collection de chaussures" /></section>
+      <section className="section shoe-catalogue split-scroll" id="collection-chaussures"><div className="section-head reveal"><div><div className="kicker">La collection chaussures</div><h2>À chaque pas, son allure</h2></div><div className="kicker">{visibleShoes.length} modèles · tailles indiquées sur les visuels</div></div><div className="collection-filters" role="group" aria-label="Filtrer les chaussures par genre">{['Tous', 'Femme', 'Homme'].map((filter) => <button key={filter} type="button" className={shoeFilter === filter ? 'active' : ''} aria-pressed={shoeFilter === filter} onClick={() => setShoeFilter(filter)}>{filter}</button>)}</div><div className="products">{visibleShoes.map((product) => <ProductCard key={product.name} product={product} {...cardProps} />)}</div></section>
 
       <section className="testimonials split-scroll"><div className="kicker">Le style au quotidien</div><div className="rating">★★★★★</div><div className="quote">« La sélection est superbe, et mon parfum est arrivé si joliment présenté. Je reviendrai sans hésiter. »</div><div className="quote-author">Aminata · Cliente · Parfum Élégance</div></section>
       <section className="section social-section split-scroll" id="social"><div className="section-head"><div><div className="kicker">Vos inspirations, vos instants</div><h2>Inspirez-vous</h2></div><a className="text-link" href="#newsletter">Nous suivre ↗</a></div><div className="social-grid">{['bottine-talon-rouge','mocassin-brun-homme','sandale-jaune-bridee','cuissarde-bleu-nuit','espadrille-bleu-marine'].map((img) => <a className="social" href="#newsletter" key={img}><img loading="lazy" src={`/images/chaussures/${img}.jpg`} alt="Modèle noir et sélection mode MGE Boutique" /></a>)}</div></section>
