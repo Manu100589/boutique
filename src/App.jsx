@@ -124,7 +124,7 @@ function App() {
         entry.target.classList.add('visible');
         observer.unobserve(entry.target);
       }
-    }), { threshold: 0.12, rootMargin: '0px 0px -10% 0px' });
+    }), { threshold: 0.01, rootMargin: '0px 0px -10% 0px' });
     targets.forEach((el, index) => {
       el.classList.add('scroll-reveal');
       el.style.setProperty('--motion-delay', `${(index % 5) * 75}ms`);
