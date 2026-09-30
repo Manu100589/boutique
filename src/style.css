@@ -53,3 +53,4 @@
 
 .pagne-intro{max-width:540px;margin:-18px 0 34px;color:var(--muted);font-size:12px;line-height:1.9}
 @media(max-width:760px){.pagne-intro{margin:-8px 0 25px}}
+.beauty-catalogue{background:#f7f8f6}.beauty-catalogue .product-img{background:#edf3ef}
