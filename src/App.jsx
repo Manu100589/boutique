@@ -74,8 +74,6 @@ const photo = (id, width = 900) => `https://images.unsplash.com/${id}?auto=forma
 const money = (value) => value == null ? 'Prix sur demande' : `${new Intl.NumberFormat('fr-FR').format(value)} FCFA`;
 // Public contact number supplied by MGE Boutique, in wa.me international format.
 const whatsappNumber = '237696798626';
-const shareableProductImages = new Map();
-const productImageLoads = new Map();
 const stored = (key, fallback) => {
   try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
 };
@@ -104,60 +102,13 @@ function getWhatsAppOrderUrl(product, imageUrl) {
   return `https://wa.me${recipient}?text=${encodeURIComponent(message)}`;
 }
 
-function prepareProductImageShare(product, imageUrl) {
-  if (shareableProductImages.has(imageUrl) || productImageLoads.has(imageUrl)) return;
-
-  const load = fetch(imageUrl)
-    .then((response) => {
-      if (!response.ok) throw new Error('Image indisponible');
-      return response.blob();
-    })
-    .then((imageBlob) => {
-      if (!imageBlob.type.startsWith('image/')) throw new Error('Le fichier ne contient pas une image');
-
-      const extension = imageBlob.type.split('/')[1]?.replace('jpeg', 'jpg') || 'jpg';
-      const safeName = product.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase();
-      const imageFile = new File([imageBlob], `${safeName || 'article'}.${extension}`, { type: imageBlob.type });
-      shareableProductImages.set(imageUrl, imageFile);
-    })
-    .catch(() => {})
-    .finally(() => productImageLoads.delete(imageUrl));
-
-  productImageLoads.set(imageUrl, load);
-}
-
-function shareProductOnWhatsApp(event, product, imageUrl) {
-  const canTryFileShare = typeof navigator !== 'undefined'
-    && typeof navigator.share === 'function'
-    && typeof navigator.canShare === 'function'
-    && typeof File !== 'undefined'
-    && navigator.canShare({ files: [new File([''], 'article.jpg', { type: 'image/jpeg' })] });
-  const imageFile = shareableProductImages.get(imageUrl);
-
-  // Keep the direct WhatsApp link on browsers without file sharing or while the photo loads.
-  if (!canTryFileShare || !imageFile || !navigator.canShare({ files: [imageFile] })) return;
-
-  event.preventDefault();
-
-  navigator.share({
-      title: `Envoyer à MGE Boutique (+237 696 798 626)`,
-      text: getProductOrderMessage(product, imageUrl),
-      files: [imageFile],
-    }).catch((error) => {
-      // Closing the share sheet is an intentional user choice, so leave the page alone.
-      if (error?.name === 'AbortError') return;
-
-      window.location.assign(getWhatsAppOrderUrl(product, imageUrl));
-    });
-}
-
 function ProductCard({ product, onAdd, wishlist, onWish, trend = false }) {
   const image = product.image ?? photo(product.img, 800);
   const imageUrl = new URL(image, window.location.href).href;
   const orderUrl = getWhatsAppOrderUrl(product, imageUrl);
   return <article className={`product-card ${trend ? 'trend-card' : ''}`}>
     <div className="product-img">
-      <img loading="lazy" src={image} alt={product.name} onLoad={() => prepareProductImageShare(product, imageUrl)} />
+      <img loading="lazy" src={image} alt={product.name} />
       <span className="badge">{product.badge}</span>
       <button className={`heart ${wishlist.includes(product.name) ? 'active' : ''}`} aria-label="Ajouter aux favoris" onClick={() => onWish(product.name)}>
         {wishlist.includes(product.name) ? '♥' : '♡'}
@@ -167,7 +118,7 @@ function ProductCard({ product, onAdd, wishlist, onWish, trend = false }) {
       <div className="product-meta"><span>{product.cat}</span><strong>{money(product.price)}</strong></div>
       {product.notes && <div className="perfume-notes">{product.notes}</div>}
     </div>
-    <a className="whatsapp-cta" href={orderUrl} target="_blank" rel="noopener noreferrer" onClick={(event) => shareProductOnWhatsApp(event, product, imageUrl)}>Commandez sur WhatsApp&nbsp; ↗</a>
+    <a className="whatsapp-cta" href={orderUrl} target="_blank" rel="noopener noreferrer">Commandez sur WhatsApp&nbsp; ↗</a>
   </article>;
 }
 
